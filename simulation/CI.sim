@@ -1,0 +1,67 @@
+import static oms3.SimBuilder.instance as OMS3
+def home = oms_prj
+
+// start and end date of the simulation
+def startDate= "2004-06-10 00:00"
+def endDate="2009-12-31 23:00"
+OMS3.sim {
+
+resource "$oms_prj/lib"
+
+ model(while: "reader_data_SWRB_measured.doProcess" ) {
+   components {
+    
+        // components to be called: reader input data, CI and writer output data
+        "reader_data_SWRB_measured"            "org.jgrasstools.gears.io.timedependent.OmsTimeSeriesIteratorReader"
+        "reader_data_SWRB_top"                 "org.jgrasstools.gears.io.timedependent.OmsTimeSeriesIteratorReader"
+        "CI"                                   "clearnessIndex.ClearnessIndexPointCase"
+        "vreader_station"                      "org.jgrasstools.gears.io.shapefile.OmsShapefileFeatureReader"
+        "writer_CI"                            "org.jgrasstools.gears.io.timedependent.OmsTimeSeriesIteratorWriter" 
+            
+         
+   }
+
+  
+   parameter{
+   
+        // parameter of the reader components 
+        "reader_data_SWRB_measured.file"             "${home}/data/shortwave_measured.csv" 
+        "reader_data_SWRB_measured.idfield"          "ID"  
+        "reader_data_SWRB_measured.tStart"           "${startDate}"
+        "reader_data_SWRB_measured.tEnd"             "${endDate}"
+        "reader_data_SWRB_measured.tTimestep"          60
+        "reader_data_SWRB_measured.fileNovalue"      "-9999"
+        
+        "reader_data_SWRB_top.file"             "${home}/data/TOPATM.csv"
+        "reader_data_SWRB_top.idfield"          "ID"  
+        "reader_data_SWRB_top.tStart"           "${startDate}"
+        "reader_data_SWRB_top.tEnd"             "${endDate}"
+        "reader_data_SWRB_top.tTimestep"         60
+        "reader_data_SWRB_top.fileNovalue"      "-9999"
+
+
+         "vreader_station.file"                 "${home}/data/stations.shp" 
+         
+         // paramter of the CI component     
+        "CI.fStationsid"     "cat"
+            
+        // parameter of the writing component    
+        "writer_CI.file"                   "${home}/output/CI.csv" 
+        "writer_CI.tStart"                 "${startDate}"
+        "writer_CI.tTimestep"              60
+        
+
+   }
+    connect {
+        
+        "reader_data_SWRB_measured.outData"             "CI.inSWRBMeasuredValues"
+        "reader_data_SWRB_top.outData"                  "CI.inSWRBTopATMValues"
+        "vreader_station.geodata"                       "CI.inStations"
+        "CI.outCIHM"                                    "writer_CI.inData"
+
+   }
+
+ }
+}
+
+
