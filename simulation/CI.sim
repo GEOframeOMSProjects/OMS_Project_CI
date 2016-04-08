@@ -15,7 +15,6 @@ resource "$oms_prj/lib"
         "reader_data_SWRB_measured"            "org.jgrasstools.gears.io.timedependent.OmsTimeSeriesIteratorReader"
         "reader_data_SWRB_top"                 "org.jgrasstools.gears.io.timedependent.OmsTimeSeriesIteratorReader"
         "CI"                                   "clearnessIndex.ClearnessIndexPointCase"
-        "vreader_station"                      "org.jgrasstools.gears.io.shapefile.OmsShapefileFeatureReader"
         "writer_CI"                            "org.jgrasstools.gears.io.timedependent.OmsTimeSeriesIteratorWriter" 
             
          
@@ -38,12 +37,8 @@ resource "$oms_prj/lib"
         "reader_data_SWRB_top.tEnd"             "${endDate}"
         "reader_data_SWRB_top.tTimestep"         60
         "reader_data_SWRB_top.fileNovalue"      "-9999"
+   
 
-
-         "vreader_station.file"                 "${home}/data/stations.shp" 
-         
-         // paramter of the CI component     
-        "CI.fStationsid"     "cat"
             
         // parameter of the writing component    
         "writer_CI.file"                   "${home}/output/CI.csv" 
@@ -56,7 +51,6 @@ resource "$oms_prj/lib"
         
         "reader_data_SWRB_measured.outData"             "CI.inSWRBMeasuredValues"
         "reader_data_SWRB_top.outData"                  "CI.inSWRBTopATMValues"
-        "vreader_station.geodata"                       "CI.inStations"
         "CI.outCIHM"                                    "writer_CI.inData"
 
    }
